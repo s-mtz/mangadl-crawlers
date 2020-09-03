@@ -14,12 +14,14 @@
             "email": "s.mtz.hakim@gmail.com"
         }
     ],
-
     "license": "MIT",
     "autoload": {
         "psr-4": {
             "MangaCrawlers\\": "src/"
         }
+    },
+    "scripts": {
+        "test": "phpunit tests"
     },
     "version": "0.1.0"
 }
