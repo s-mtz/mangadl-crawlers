@@ -2,5 +2,24 @@
     "name": "s-mtz/manga-crawlers",
     "description": "crawelsers for mangadl_tbot",
     "type": "libraary",
-    "require": {}
+    "require": {
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    },
+    "authors": [
+        {
+            "name": "Seyed Morteza HakimZadeh",
+            "email": "s.mtz.hakim@gmail.com"
+        }
+    ],
+
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "MangaCrawlers\\": "src/"
+        }
+    },
+    "version": "0.1.0"
 }
