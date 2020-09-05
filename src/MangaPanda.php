@@ -2,6 +2,8 @@
 
 namespace MangaCrawlers;
 
+use Exception;
+
 /**
  * [MangaPanda description]
  */
@@ -23,13 +25,45 @@ class MangaPanda
      * @return  boolean|string return false on failure (and also fill $error) and path of downloaded folder
      *
      */
-    public function download($_name, $_chapter, $_path)
+    public function download(string $_name, int $_chapter, string $_path)
     {
+        $_name = filter_var($_name, FILTER_SANITIZE_STRING);
+        $_chapter = intval($_chapter);
+        if ($_chapter === 0) {
+            $this->error["message"] = "chapter not defiend";
+            return false;
+        }
+        $_path = filter_var($_path, FILTER_SANITIZE_STRING);
+
         $last_page = $this->last_page_finder($_name, $_chapter);
         for ($i = 1; $i < $last_page; $i++) {
+            $decider = true;
             $save_image_path =
                 $this->make_manga_dir($_path, "mangapanda", $_name, $_chapter) . $i . '.jpg';
-            copy($this->image_finder($_name, $_chapter, $i), $save_image_path);
+            try {
+                if (!copy($this->image_finder($_name, $_chapter, $i), $save_image_path)) {
+                    throw new Exception();
+                }
+            } catch (Exception $e) {
+                for ($k = 0; $k < 4; $k++) {
+                    try {
+                        if (!copy($this->image_finder($_name, $_chapter, $i), $save_image_path)) {
+                            throw new Exception();
+                        } else {
+                            $decider = true;
+                            break;
+                        }
+                    } catch (Exception $e) {
+                        if ($k == 4) {
+                            $decider = false;
+                        }
+                    }
+                }
+                if (!$decider) {
+                    $this->error["message"] = "coulnt download page number $i";
+                    return $decider;
+                }
+            }
         }
     }
 
@@ -86,7 +120,7 @@ class MangaPanda
         if ($last_page > 0) {
             return $last_page;
         }
-        $this->error["message"] = "url intrrupt";
+        $this->error["message"] = "last page intrrupt";
         return false;
     }
 
@@ -105,7 +139,7 @@ class MangaPanda
 
         $html = file_get_contents($url);
         if (!$html) {
-            $this->error["message"] = "url intrrupt";
+            $this->error["message"] = "couldent get the site content";
             return false;
         }
         $image_url = $this->get_inner_string($html, 'id="img"', 'alt=');
@@ -126,19 +160,28 @@ class MangaPanda
      *
      * @return  [type]        [return description]
      */
-    function make_manga_dir($_path, $_crawler, $_name, $_chapter)
+    private function make_manga_dir($_path, $_crawler, $_name, $_chapter)
     {
         $file_crawler_path = $_path . $_crawler . '/';
         if (!file_exists($file_crawler_path)) {
-            mkdir($file_crawler_path);
+            if (!mkdir($file_crawler_path)) {
+                $this->error["message"] = "couldnt make crawler path";
+                return false;
+            }
         }
         $file_manga_path = $file_crawler_path . $_name . '/';
         if (!file_exists($file_manga_path)) {
-            mkdir($file_manga_path);
+            if (!mkdir($file_manga_path)) {
+                $this->error["message"] = "couldnt make manga path";
+                return false;
+            }
         }
         $file_chapter_path = $file_manga_path . $_chapter . '/';
         if (!file_exists($file_chapter_path)) {
-            mkdir($file_chapter_path);
+            if (!mkdir($file_chapter_path)) {
+                $this->error["message"] = "couldnt make chapter path";
+                return false;
+            }
         }
         return $file_chapter_path;
     }
