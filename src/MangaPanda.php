@@ -16,6 +16,18 @@ class MangaPanda
      */
     private $error = [];
 
+    public function check_name(string $_name)
+    {
+        $url = "http://www.mangapanda.com/$_name";
+
+        $html = file_get_contents($url);
+        if (!$html) {
+            $this->error["message"] = "url intrrupt";
+            return false;
+        }
+        return true;
+    }
+
     /**
      * [download description]
      *
