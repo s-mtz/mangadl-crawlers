@@ -1,5 +1,5 @@
 {
-    "name": "s-mtz/manga-crawlers",
+    "name": "smtz/manga-crawlers",
     "description": "crawelsers for mangadl_tbot",
     "type": "libraary",
     "require": {
