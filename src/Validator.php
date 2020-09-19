@@ -27,7 +27,7 @@ class Validator
         }
     }
 
-    public function check_chapter(string $_crawler, string $_manga, int $_chapter)
+    public function check_chapter(string $_crawler, string $_manga, string $_chapter)
     {
         if ($_crawler == "mangapanda") {
             $url = "http://www.mangapanda.com/$_manga/$_chapter";
