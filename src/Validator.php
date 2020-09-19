@@ -29,22 +29,24 @@ class Validator
             }
             return true;
         }
+        return true;
     }
 
     public function check_chapter(string $_crawler, string $_manga, int $_chapter)
     {
-        if ($_crawler == "mangapanda") {
-            $url = "http://www.mangapanda.com/$_manga/$_chapter";
+        // if ($_crawler == "mangapanda") {
+        //     $url = "http://www.mangapanda.com/$_manga/$_chapter";
 
-            $html = file_get_contents($url);
-            if (!$html) {
-                $this->error["message"] = "manga or chapter input error";
-                return false;
-            }
-            return true;
-        }
-        $this->error["message"] = "crawler input error";
-        return false;
+        //     $html = file_get_contents($url);
+        //     if (!$html) {
+        //         $this->error["message"] = "manga or chapter input error";
+        //         return false;
+        //     }
+        //     return true;
+        // }
+        // $this->error["message"] = "crawler input error";
+        // return false;
+        return true;
     }
 
     public function get_error()
