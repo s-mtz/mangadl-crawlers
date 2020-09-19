@@ -27,14 +27,16 @@ class Validator
         }
     }
 
-    public function check_chapter(string $_manga, int $_chapter)
+    public function check_chapter(string $_crawler, string $_manga, int $_chapter)
     {
-        $url = "http://www.mangapanda.com/$_manga/$_chapter";
+        if ($_crawler == "mangapanda") {
+            $url = "http://www.mangapanda.com/$_manga/$_chapter";
 
-        $html = file_get_contents($url);
-        if (!$html) {
-            return false;
+            $html = file_get_contents($url);
+            if (!$html) {
+                return false;
+            }
+            return true;
         }
-        return true;
     }
 }
