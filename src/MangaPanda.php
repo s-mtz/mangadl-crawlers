@@ -36,10 +36,15 @@ class MangaPanda
         $_path = filter_var($_path, FILTER_SANITIZE_STRING);
 
         $last_page = $this->last_page_finder($_name, $_chapter);
-        for ($i = 1; $i < $last_page; $i++) {
+
+        $chapter_path = $this->make_manga_dir($_path, "mangapanda", $_name, $_chapter);
+
+        for ($i = 1; $i <= $last_page; $i++) {
             $decider = true;
+
             $save_image_path =
                 $this->make_manga_dir($_path, "mangapanda", $_name, $_chapter) . $i . '.jpg';
+
             try {
                 if (!copy($this->image_finder($_name, $_chapter, $i), $save_image_path)) {
                     throw new Exception();
@@ -65,6 +70,7 @@ class MangaPanda
                 }
             }
         }
+        return $chapter_path;
     }
 
     /**
