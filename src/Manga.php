@@ -26,11 +26,11 @@ class Manga
                     $this->error["message"] = $obj->get_error();
                     return false;
                 }
-                if (!$this->pdf_maker($_manga, $_chapter, $chapter_path)) {
+                if (!$this->zip_maker($_manga, $_chapter, $chapter_path)) {
                     $this->remove_cache_files($chapter_path);
                     return false;
                 }
-                if (!$this->zip_maker($_manga, $_chapter, $chapter_path)) {
+                if (!$this->pdf_maker($_manga, $_chapter, $chapter_path)) {
                     $this->remove_cache_files($chapter_path);
                     return false;
                 }
@@ -60,19 +60,19 @@ class Manga
 
     private function zip_maker(string $_manga, int $_chapter, string $_chapter_path)
     {
-        $zip = new \ZipArchive();
-        $job = $zip->open($_chapter_path . $_manga . "_" . $_chapter . ".zip", \ZipArchive::CREATE);
-        if (!$job) {
-            $this->error["message"] = $job;
+        $zipFile = new \PhpZip\ZipFile();
+        try {
+            $zipFile
+                ->addDir($_chapter_path, "{$_manga}/{$_chapter}/") // add files from the directory
+                ->saveAsFile("{$_chapter_path}{$_manga}_{$_chapter}.zip") // save the archive to a file
+                ->close(); // close archive
+        } catch (\PhpZip\Exception\ZipException $e) {
+            $this->error["message"] = "can't make zip";
             return false;
+        } finally {
+            $zipFile->close();
+            return true;
         }
-
-        for ($i = 1; file_exists($_chapter_path . $i . '.jpg'); $i++) {
-            $zip->addFile($_chapter_path . $i . '.jpg');
-        }
-
-        $zip->close();
-        return true
     }
 
     public function get_error()

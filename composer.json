@@ -3,7 +3,8 @@
     "description": "crawelsers for mangadl_tbot",
     "type": "libraary",
     "require": {
-        "guzzlehttp/guzzle": "^7.0"
+        "guzzlehttp/guzzle": "^7.0",
+        "nelexa/zip": "^3.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^9"
