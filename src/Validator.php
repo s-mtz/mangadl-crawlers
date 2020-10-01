@@ -35,13 +35,18 @@ class Validator
     public function check_chapter(string $_crawler, string $_manga, int $_chapter)
     {
         if ($_crawler == "mangapanda") {
-            $html = "http://www.mangapanda.com/$_manga/$_chapter";
+            $url = "http://www.mangapanda.com/$_manga/$_chapter";
+            $html = file_get_contents($url);
+            if (!$html) {
+                $this->error["message"] = "couldent get the site content";
+                return false;
+            }
             $image_url = $this->get_inner_string($html, 'id="img"', 'alt=');
             $image_url = substr($image_url, strpos($image_url, 'https://'));
             $image_url = substr($image_url, 0, strpos($image_url, '"'));
 
             if (strlen($image_url) > 10) {
-                return $image_url;
+                return true;
             }
             return false;
         }
