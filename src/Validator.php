@@ -22,8 +22,7 @@ class Validator
         if ($_crawler == "mangapanda") {
             $url = "http://www.mangapanda.com/$_manga";
 
-            $html = file_get_contents($url);
-            if (empty($html)) {
+            if (!file_get_contents($url)) {
                 $this->error["message"] = "manga input error";
                 return false;
             }
