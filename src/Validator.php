@@ -2,6 +2,8 @@
 
 namespace MangaCrawlers;
 
+use GuzzleHttp\Client;
+
 class Validator
 {
     private $error = [];
@@ -19,13 +21,17 @@ class Validator
 
     public function check_manga(string $_crawler, string $_manga)
     {
+        $client = new Client();
         if ($_crawler == "mangapanda") {
             $url = "http://www.mangapanda.com/$_manga";
 
-            if (!file_get_contents($url)) {
+            try {
+                $client->request('GET', $url);
+            } catch (\Exception $e) {
                 $this->error["message"] = "manga input error";
                 return false;
             }
+
             return true;
         }
         return false;
